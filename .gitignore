@@ -1,0 +1,28 @@
+.DS_Store
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+*.log
+*.h5
+*.mat
+*.sqlite
+/.idea/
+*.swp
+
+# Jupyter
+profile_default/
+ipython_config.py
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
