@@ -25,8 +25,8 @@ Reproducible benchmarking of custom 9-term Tolles–Lawson aircraft magnetic com
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/magnav-benchmark.git
-cd magnav-benchmark
+git clone https://github.com/luciraid/magnav-research.git
+cd magnav-research/magnav-benchmark
 
 # Install Julia dependencies
 julia --project=. -e "using Pkg; Pkg.instantiate()"
@@ -50,8 +50,8 @@ julia --project=. show_results.jl
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/magnav-benchmark.git
-   cd magnav-benchmark
+   git clone https://github.com/luciraid/magnav-research.git
+   cd magnav-research/magnav-benchmark
    ```
 
 2. **Install Julia dependencies**
@@ -227,13 +227,14 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ### Development Setup
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/magnav-benchmark.git
-cd magnav-benchmark
+git clone https://github.com/luciraid/magnav-research.git
+cd magnav-research
 
 # Create feature branch
 git checkout -b feature/your-feature
 
 # Run tests before committing
+cd magnav-benchmark
 julia --project=. runtests.jl
 
 # Submit pull request
@@ -254,9 +255,9 @@ If you use this framework in your research, please cite:
 ```bibtex
 @software{magnav_benchmark_2024,
   title={{MagNav TL Benchmark Framework}: Reproducible Tolles-Lawson Magnetic Compensation Benchmarking},
-  author={Your Name},
+  author={Lucifer},
   year={2024},
-  url={https://github.com/yourusername/magnav-benchmark},
+  url={https://github.com/luciraid/magnav-research/tree/master/magnav-benchmark},
   doi={10.5281/zenodo.1234567}
 }
 ```
@@ -279,9 +280,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/magnav-benchmark/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/magnav-benchmark/discussions)
-- **Documentation**: [Full Documentation](https://yourusername.github.io/magnav-benchmark/)
+- **Issues**: [GitHub Issues](https://github.com/luciraid/magnav-research/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/luciraid/magnav-research/discussions)
+- **Documentation**: [Full Documentation](https://github.com/luciraid/magnav-research/tree/master/magnav-benchmark#readme)
 
 ```bash
 # From project root:
