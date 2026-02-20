@@ -1,0 +1,81 @@
+# Julia
+Manifest.toml
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+.DS_Store
+.vscode/
+.idea/
+
+# Results and outputs
+results/
+*.png
+*.pdf
+*.svg
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter notebooks (if not using Pluto)
+.ipynb_checkpoints/
+
+# Data files (large files should be downloaded via artifacts)
+*.h5
+*.hdf5
+*.mat
+
+# Build artifacts
+/build/
+/dist/
+
+# Documentation build
+/docs/build/
+/docs/.doctrees/
+
+# Python (if any Python components)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Node.js (if any web components)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
