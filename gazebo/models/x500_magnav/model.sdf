@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  x500_magnav — MagNav-instrumented x500 quadrotor (Gazebo Harmonic / PX4 SITL)
+
+  Inherits the full x500 model and attaches MagneticMapPlugin, which:
+    - Loads the Ottawa area anomaly map (ottawa_map.bin)
+    - Queries map value at current GPS position (bilinear interpolation)
+    - Adds 9-term Tolles-Lawson aircraft interference
+    - Adds Gaussian noise
+    - Republishes the corrected magnetic field so PX4 reads it directly
+
+  Topic chain (zero PX4 source changes required):
+    Gazebo sensor  →  /magnav/raw_magnetometer                (WMM only, private)
+    MagneticMapPlugin →  /world/default/model/x500_magnav/link/base_link/
+                           sensor/magnetometer_sensor/magnetometer  (PX4 topic)
+                      →  /magnav/mag_anomaly_nT               (debug scalar)
+                      →  /magnav/tl_interference_nT           (debug scalar)
+    PX4 gz_bridge  ←  ...magnetometer_sensor/magnetometer     (standard topic)
+
+  Build the plugin first:
+    cmake -B build/plugin gazebo/plugins
+    cmake --build build/plugin -j$(nproc)
+
+  Launch:
+    export GZ_SIM_SYSTEM_PLUGIN_PATH=$(pwd)/build/plugin
+    PX4_HOME_LAT=44.76 PX4_HOME_LON=-76.15 PX4_HOME_ALT=397 \
+      make -C ~/PX4-Autopilot px4_sitl gz_x500_magnav
+-->
+<sdf version='1.9'>
+  <model name='x500_magnav'>
+
+    <!-- ── Inherit all x500 components (motors, links, all standard sensors) ── -->
+    <include merge='true'>
+      <uri>model://x500</uri>
+    </include>
+
+    <!-- ── Magnetometer: zero-noise, raw output redirected to private topic ────
+         Noise injection is done by MagneticMapPlugin.
+         The <topic> override redirects Gazebo's WMM-only output away from PX4's
+         default topic so the plugin is the sole publisher on the PX4 topic.
+         Topic chain:
+           Gazebo sensor  →  /magnav/raw_magnetometer        (WMM only)
+           MagneticMapPlugin  →  /world/default/model/x500_magnav/link/base_link/
+                                   sensor/magnetometer_sensor/magnetometer
+                               →  /magnav/mag_anomaly_nT       (debug)
+                               →  /magnav/tl_interference_nT   (debug)
+           PX4 gz_bridge  ←  /world/default/model/x500_magnav/...magnetometer
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <link name="base_link">
+      <sensor name="magnetometer_sensor" type="magnetometer">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+        <magnetometer>
+          <x><noise type="none"/></x>
+          <y><noise type="none"/></y>
+          <z><noise type="none"/></z>
+        </magnetometer>
+        <!-- Redirect raw WMM field away from the PX4-default topic.
+             MagneticMapPlugin reads here, processes, writes to the PX4 topic. -->
+        <topic>/magnav/raw_magnetometer</topic>
+      </sensor>
+    </link>
+
+    <!-- ── MagneticMapPlugin ────────────────────────────────────────────────────
+         Loaded as a Gazebo System plugin (ISystemConfigure).
+         Build: cmake -B build/plugin gazebo/plugins && cmake --build build/plugin
+         Set:   export GZ_SIM_SYSTEM_PLUGIN_PATH=/path/to/build/plugin
+
+         Parameters:
+           map_file         — ottawa_map.bin (absolute path)
+           coef_file        — custom_tl_coef.txt (absolute path)
+           noise_nT         — Gaussian noise std-dev in nT  (default 5.0)
+           enable_tl        — true/false   inject TL interference
+           enable_anomaly   — true/false   inject Ottawa anomaly
+           world            — Gazebo world name  (must match launch world)
+           model            — must match this model's <name> above
+           link             — link containing the magnetometer sensor
+           mag_input_topic  — topic to read raw WMM field from
+           mag_output_topic — topic to write corrected field to (PX4 reads this)
+
+         NOTE: map_file and coef_file use ABSOLUTE paths because Gazebo's
+         working directory when launched via PX4 SITL is ~/PX4-Autopilot,
+         not the magnav-research repo root.
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <plugin
+        filename="MagneticMapPlugin"
+        name="magnav::MagneticMapPlugin">
+
+      <!-- Absolute paths — required because PX4 SITL CWD is ~/PX4-Autopilot -->
+      <map_file>/home/lucifer/magnav/magnav-research/gazebo/plugins/data/ottawa_map.bin</map_file>
+      <coef_file>/home/lucifer/magnav/magnav-research/results/run_20260220_221033/logs/custom_tl_coef.txt</coef_file>
+
+      <!-- Gaussian noise std-dev in nT -->
+      <noise_nT>5.0</noise_nT>
+
+      <!-- Enable both anomaly map and TL interference -->
+      <enable_tl>true</enable_tl>
+      <enable_anomaly>true</enable_anomaly>
+
+      <!-- Gazebo world and model names — must match launch arguments -->
+      <world>default</world>
+      <model>x500_magnav</model>
+      <link>base_link</link>
+
+      <!-- Topic override: read from the redirected raw sensor topic -->
+      <mag_input_topic>/magnav/raw_magnetometer</mag_input_topic>
+
+      <!-- Topic override: publish corrected field to the topic PX4 gz_bridge
+           subscribes to.  Must match:
+             /world/{world}/model/{model}/link/{link}/sensor/magnetometer_sensor/magnetometer
+           GZBridge.cpp lines 232-233 construct exactly this string. -->
+      <mag_output_topic>/world/default/model/x500_magnav/link/base_link/sensor/magnetometer_sensor/magnetometer</mag_output_topic>
+    </plugin>
+
+  </model>
+</sdf>

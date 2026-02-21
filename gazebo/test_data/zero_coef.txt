@@ -1,0 +1,13 @@
+# Zero (null) TL coefficients — baseline / control test
+# All 9 terms = 0.0 → TL compensation is a no-op.
+# Using this confirms the raw Gazebo magnetometer signal before any correction.
+# Compare results to my_coef.txt to see what TL compensation actually does.
+c[01] = 0.0
+c[02] = 0.0
+c[03] = 0.0
+c[04] = 0.0
+c[05] = 0.0
+c[06] = 0.0
+c[07] = 0.0
+c[08] = 0.0
+c[09] = 0.0

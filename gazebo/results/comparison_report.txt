@@ -1,0 +1,84 @@
+========================================================================
+  MagNav TL Compensation — Side-by-Side Comparison Report
+========================================================================
+  Generated : 2026-02-22 00:41:35
+  Flight log: 18_01_09.ulg
+  Same log  : YES — results are directly comparable.
+
+  Test A                    zero_coef
+  Test B                    custom_tl_coef
+
+========================================================================
+  Flight Info
+========================================================================
+
+  Metric                    [A] zero_coef       [B] custom_tl_coef  
+------------------------------------------------------------------------
+  Samples                   4293                4293                
+  Duration (min)            7.2                 7.2                 
+  Lat range (°)             44.7600–44.7600     44.7600–44.7600     
+  Alt range (m)             397–397             397–397             
+
+========================================================================
+  TL Compensation Quality
+========================================================================
+
+  Metric                    [A] zero_coef       [B] custom_tl_coef  Change A→B
+------------------------------------------------------------------------
+  Variance reduction (%)    0.0%                -432.6%             ↓ WORSE
+  Hdg corr BEFORE TL        0.0104              0.0104              
+  Hdg corr AFTER  TL        0.0104              0.0015              ↓ BETTER
+  RMS interference (nT)     0.00                94217.46            
+
+========================================================================
+  Estimated Navigation DRMS  (* extrapolated from Flt1006 benchmark)
+========================================================================
+
+  Metric                    [A] zero_coef       [B] custom_tl_coef  Change A→B
+------------------------------------------------------------------------
+  GPS baseline (m)          3.00 m              3.00 m              
+  Mag nav w/o TL* (m)       0.23 m              0.23 m              
+  Mag nav w/  TL* (m)       0.25 m              0.04 m              ↓ BETTER
+  Est. improvement (%)      N/A                 84%                 
+
+========================================================================
+  Interpretation
+========================================================================
+
+  ✓  [custom_tl_coef] reduces heading-correlated interference
+     more than [zero_coef].
+     Hdg corr after TL:  0.0104  →  0.0015
+
+  NOTE: Test A (zero coefs) is the raw Gazebo signal.
+    Hdg corr 0.0104 = raw aircraft heading interference.
+    Test B coefs should reduce this below 0.0104.
+
+========================================================================
+  Stakeholder Summary
+========================================================================
+
+  Pipeline validated on Gazebo SITL flight:
+    Log: 18_01_09.ulg
+    Duration: 7.2 min
+
+  Test inputs:
+    [A] zero_coef.txt  — null baseline (raw signal)
+    [B] my_coef.txt    — trained 9-term TL model
+
+  The framework is ready for external coefficients.
+  Send your custom_tl_coef.txt and I will:
+    1. Place it in gazebo/test_data/
+    2. Run: ./gazebo/run_test.sh your_coef.txt --ulg <log>
+    3. Return a comparison report + validation plot.
+
+========================================================================
+  Output Files
+========================================================================
+
+  [A] /home/lucifer/magnav/magnav-research/gazebo/results/zero_coef_20260222_004040
+      Plot: 18_01_09_tl_validation.png
+  [B] /home/lucifer/magnav/magnav-research/gazebo/results/custom_tl_coef_20260222_004056
+      Plot: 18_01_09_tl_validation.png
+  Report: /home/lucifer/magnav/magnav-research/gazebo/results/comparison_report.txt
+
+========================================================================

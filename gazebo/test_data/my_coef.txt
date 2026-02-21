@@ -1,0 +1,1 @@
+/home/lucifer/magnav/magnav-research/results/run_20260220_221033/logs/custom_tl_coef.txt

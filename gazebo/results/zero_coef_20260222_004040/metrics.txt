@@ -1,0 +1,44 @@
+============================================================
+  test_tl_on_sim.py — TL Validation on Gazebo Flight
+============================================================
+
+▶ Loading TL coefficients from: /home/lucifer/magnav/magnav-research/gazebo/test_data/zero_coef.txt
+  9 coefficients loaded: [0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+▶ Extracting data from: /home/lucifer/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-02-21/18_01_09.ulg
+  Samples: 4293  (7.2 min at 10 Hz)
+  Lat: 44.7600° – 44.7600°
+  Alt: 397 – 397 m
+
+▶ Applying 9-term TL compensation...
+  RMS interference removed: 0.00 nT
+  |B| raw  — mean: 52800.0 nT, std: 5.8 nT
+  |B| comp — mean: 52800.0 nT, std: 5.8 nT
+
+── Compensation Metrics ────────────────────────────────
+  Variance reduction        : 0.0%
+  Heading corr before TL    : 0.0104
+  Heading corr after  TL    : 0.0104
+  RMS interference removed  : 0.00 nT
+── Estimated DRMS (extrapolated from Flt1006 benchmark) ─
+  GPS baseline              : 3.00 m
+  Mag nav without TL (est.) : 0.23 m
+  Mag nav with TL    (est.) : 0.25 m
+  Estimated improvement     : -10%
+
+  ⚠ Heading correlation did not decrease.
+    Possible causes:
+    • Gazebo aircraft model differs significantly from Flt1006
+    • Very short flight (< 2 min) — insufficient heading coverage
+    • Coefficient mismatch — consider re-training on this aircraft
+
+▶ Generating plot...
+  ✓ Saved: /home/lucifer/magnav/magnav-research/gazebo/results/zero_coef_20260222_004040/18_01_09_tl_validation.png
+
+============================================================
+  To compute exact navigation DRMS:
+    1. Convert this log to HDF5:
+       julia gazebo/scripts/ulg_to_xyz.jl /home/lucifer/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-02-21/18_01_09.ulg
+    2. Run MagNav.jl benchmark:
+       julia --project=benchmark benchmark/bench_tl_compare.jl
+============================================================

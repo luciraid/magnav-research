@@ -26,3 +26,16 @@ ipython_config.py
 
 # Temporary files
 *.tmp
+
+# Large generated binary map data (run export_ottawa_map.jl to regenerate)
+gazebo/plugins/data/
+
+# Stray PX4 symlinks created at repo root during SITL runs
+/etc
+/test_data
+
+# PX4 SITL runtime logs captured inside results dirs
+gazebo/results/*/px4_sitl.log
+
+# C++ build output (plugin .so lives in build/plugin/)
+build/plugin/
