@@ -1,270 +1,0 @@
-Script started on 2026-02-06 23:37:45+05:30 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="184" LINES="45"]
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mjulia[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cjulia
-[A
-[?2004l               [1m[32m_[0m
-   [1m[34m_[0m       [0m_[0m [1m[31m_[1m[32m(_)[1m[35m_[0m     |  Documentation: https://docs.julialang.org
-  [1m[34m(_)[0m     | [1m[31m(_)[0m [1m[35m(_)[0m    |
-   [0m_ _   _| |_  __ _[0m   |  Type "?" for help, "]?" for Pkg help.
-  [0m| | | | | | |/ _` |[0m  |
-  [0m| | |_| | | | (_| |[0m  |  Version 1.10.0 (2023-12-25)
- [0m_/ |\__'_|_|_|\__'_|[0m  |  Official https://julialang.org/ release
-[0m|__/[0m                   |
-
-[?2004h[0K[32m[1mjulia> [0m[0m[7C[7C[0K[32m[1mjulia> [0m[0m[7Cusing MagNav[19C
-[?2004l[0m
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C
-[?2004l[0m[91m[1mERROR: [22m[39mUndefVarError: `pkgroot` not defined
-Stacktrace:
- [1] top-level scope
-[90m   @[39m [90m[4mREPL[2]:1[24m[39m
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7C[7C
-[?2004l
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7C[7C[0K[0K[32m[1mjulia> [0m[0m[7C[7C[0K[0K[32m[1mjulia> [0m[0m[7C[7C[0K[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C[0K[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C
-[?2004l[0m[91m[1mERROR: [22m[39mUndefVarError: `pkgroot` not defined
-Stacktrace:
- [1] top-level scope
-[90m   @[39m [90m[4mREPL[2]:1[24m[39m
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7C[7C[0K[32m[1mjulia> [0m[0m[7Cpkgroot = dirname(dirname(pathof(MagNav)))[49C
-[?2004l[0m[1m[0m[0m"/home/lucifer/.julia/packages/MagNav/4jnlC"
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cusing MagNav[19C
-[?2004l[0m
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cpkgroot = dirname(dirname(pathof(MagNav)))[49C
-[?2004l[0m[1m[0m[0m"/home/lucifer/.julia/packages/MagNav/4jnlC"
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cpkgroot[14C
-[?2004l[0m[1m[0m[0m"/home/lucifer/.julia/packages/MagNav/4jnlC"
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cinclude(joinpath(pkgroot, "examples", "simple_magnav.jl"))[65C
-[?2004l[0m[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in Traj data: simple_magnav_data/xyz.csv
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in INS data: simple_magnav_data/xyz.csv
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS covariance matrix data (zeros)
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating compensated vector magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mgetting vector map values, possibly with upward/downward continuation
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39madding FOGM & white noise to vector map values
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating uncompensated scalar magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating diurnal data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in Traj data: simple_magnav_data/xyz.h5
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in INS data: simple_magnav_data/xyz.h5
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS covariance matrix data (zeros)
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating compensated vector magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mgetting vector map values, possibly with upward/downward continuation
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39madding FOGM & white noise to vector map values
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating uncompensated scalar magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating diurnal data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in Traj data: simple_magnav_data/xyz.mat
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mreading in INS data: simple_magnav_data/xyz.mat
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS velocity data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS specific force data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating INS covariance matrix data (zeros)
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating compensated vector magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mgetting vector map values, possibly with upward/downward continuation
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39madding FOGM & white noise to vector map values
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating uncompensated scalar magnetometer data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mcreating diurnal data
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mCRLB DRMS error = 7 m
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mINS  DRMS error = 2 m
-[36m[1m[ [22m[39m[36m[1mInfo: [22m[39mFILT DRMS error = 7 m
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004h[0K[32m[1mjulia> [0m[0m[7Cexit[11C
-[?2004l[0m[1m[0m[0mexit (generic function with 2 methods)
-
-[0K[0K[32m[1mjulia> [0m[0m[7C[7C[?2004hexit()[0K[32m[1mjulia> [0m[0m[7Cexit()[13C
-[?2004l[0m[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mls[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls
-[A
-[?2004lFlt1002-train.txt  Flt1003-train.txt  magnav_run.log
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mnano REPRODUCTION.md[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cnano REPRODUCTION.md
-[A
-[?2004l[?2004h[?1049h[22;0;0t[1;45r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[43;87H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 7.2                                                                         REPRODUCTION.md                                                                                  [1;183H(B[m[44d(B[0;7m^G(B[m Help[44;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[44;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[44;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket  (B[0;7mM-Q(B[m Previous    (B[0;7m^B(B[m Back[45d(B[0;7m^X(B[m Exit[45;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[45;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[45;113H(B[0;7mM-6(B[m Copy[45;129H(B[0;7m^Q(B[m Where Was    (B[0;7mM-W(B[m Next[45;161H(B[0;7m^F(B[m Forward[2d[?12l[?25h[?25l[1;104H(B[0;7m*[43d(B[m[K[1;183H[2d(B[0;1m[33m# MagNav Reproduction Notes[4d## Environment[5d[35m- [39m(B[mOS: Ubuntu 24.04 LTS[6d(B[0;1m[35m- [39m(B[mJulia: 1.10.0[7d(B[0;1m[35m- [39m(B[mMagNav.jl: installed via Julia Pkg[8d(B[0;1m[35m- [39m(B[mMATLAB: Installed (not required for this run)[10d(B[0;1m[33m## Execution[11d[35m- [39m(B[mExample executed: (B[0;1m[36m`examples/simple_magnav.jl`[12d[35m- [39m(B[mCommand sequence:[13;3H(B[0;1m[36m```julia[14d  using MagNav[15d  pkgroot = dirname(dirname(pathof(MagNav)))[16d  include(joinpath(pkgroot, "examples", "simple_magnav.jl"))[17d[39m(B[m[?12l[?25h[?25l[44;17H[30X[44;47H(B[0;7mM-D(B[m DOS Format[14X[44;81H            (B[0;7mM-A(B[m Append  [44;113H[26X[44;139H(B[0;7mM-B(B[m Backup File[K[45;2H(B[0;7mC(B[m Cancel[17G[30X[45;47H(B[0;7mM-M(B[m Mac Format[14X[45;81H            (B[0;7mM-P(B[m Prepend [45;113H        [45;129H          (B[0;7m^T(B[m Browse[K[43d(B[0;7mFile Name to Write: REPRODUCTION.md                                                                                                                                                     [43;36H(B[m[?12l[?25h[?25l[43;85H[1K (B[0;7m[ Writing... ](B[m[K[1;104H(B[0;7m [183G(B[m[43;84H(B[0;7m[ Wrote 15 lines ](B[m[44;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut          (B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[44;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket  (B[0;7mM-Q(B[m Previous    (B[0;7m^B(B[m Back[45;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Paste        (B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[45;113H(B[0;7mM-6(B[m Copy[45;129H(B[0;7m^Q(B[m Where Was    (B[0;7mM-W(B[m Next[45;161H(B[0;7m^F(B[m Forward[?12l[?25h[17d[?25l[43d[J[45d[?12l[?25h[45;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mtouch EXPLORATION.md[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctouch EXPLORATION.md
-[A
-[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ nano EXPLORATION.md
-[?2004l[?2004h[?1049h[22;0;0t[1;45r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[43;86H(B[0;7m[ Reading... ](B[m[43;85H(B[0;7m[ Read 0 lines ](B[m[H(B[0;7m  GNU nano 7.2                                                                         EXPLORATION.md                                                                                   [1;183H(B[m[44d(B[0;7m^G(B[m Help[44;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[44;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[44;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket  (B[0;7mM-Q(B[m Previous    (B[0;7m^B(B[m Back[45d(B[0;7m^X(B[m Exit[45;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[45;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[45;113H(B[0;7mM-6(B[m Copy[45;129H(B[0;7m^Q(B[m Where Was    (B[0;7mM-W(B[m Next[45;161H(B[0;7m^F(B[m Forward[2d[?12l[?25h[?25l[1;103H(B[0;7m*[43d(B[m[K[1;183H[2d(B[0;1m[33m# MagNav Repo Exploration Log[4d## Context[5d[35m- [39m(B[mRepo provided by stakeholder[6d(B[0;1m[35m- [39m(B[mGoal: run end-to-end MagNav pipeline as provided[8d(B[0;1m[33m## What I Tried[9d[35m- [39m(B[mExplored original JuliaCon submission repo[10d(B[0;1m[35m- [39m(B[mIdentified missing gated HDF5 datasets[11d(B[0;1m[35m- [39m(B[mInstalled and used MagNav.jl (maintained package)[12d(B[0;1m[35m- [39m(B[mRan (B[0;1m[36m`examples/simple_magnav.jl`[39m(B[m successfully[14d(B[0;1m[33m## Key Findings[15d[35m- [39m(B[mOriginal repo depends on USAF-gated HDF5 files[16d(B[0;1m[35m- [39m(B[mRepo is archival, not self-contained[17d(B[0;1m[35m- [39m(B[mMaintained MagNav.jl reproduces equivalent functionality[18d(B[0;1m[35m- [39m(B[mEKF + MagNav pipeline runs successfully on synthetic/public data[20d(B[0;1m[33m## Blockers[21d[35m- [39m(B[mMissing files:[22d(B[0;1m[35m  - [39m(B[mFlt1002-train.h5[23d(B[0;1m[35m  - [39m(B[mFlt1003-train.h5[24d(B[0;1m[35m- [39m(B[mCannot fully run original repo without these[26d(B[0;1m[33m## Evidence[27d[35m- [39m(B[mTerminal log: magnav_run.log[28d(B[0;1m[35m- [39m(B[mPlot saved in results/[29d[?12l[?25h[?25l[44;17H[30X[44;47H(B[0;7mM-D(B[m DOS Format[14X[44;81H            (B[0;7mM-A(B[m Append  [44;113H[26X[44;139H(B[0;7mM-B(B[m Backup File[K[45;2H(B[0;7mC(B[m Cancel[17G[30X[45;47H(B[0;7mM-M(B[m Mac Format[14X[45;81H            (B[0;7mM-P(B[m Prepend [45;113H        [45;129H          (B[0;7m^T(B[m Browse[K[43d(B[0;7mFile Name to Write: EXPLORATION.md                                                                                                                                                      [43;35H(B[m[?12l[?25h[?25l[43;85H[1K (B[0;7m[ Writing... ](B[m[K[1;103H(B[0;7m [183G(B[m[43;84H(B[0;7m[ Wrote 27 lines ](B[m[44;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut          (B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[44;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket  (B[0;7mM-Q(B[m Previous    (B[0;7m^B(B[m Back[45;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Paste        (B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[45;113H(B[0;7mM-6(B[m Copy[45;129H(B[0;7m^Q(B[m Where Was    (B[0;7mM-W(B[m Next[45;161H(B[0;7m^F(B[m Forward[?12l[?25h[29d[?25l[43d[J[45d[?12l[?25h[45;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mhistory > shell_history.txt[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chistory > shell_history.txt
-[A
-[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mgit status[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit status
-[A
-[?2004lOn branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	[31mmodified:   ../Manifest.toml[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	[31m../EXECUTION_REPORT.md[m
-	[31mEXPLORATION.md[m
-	[31mREPRODUCTION.md[m
-	[31mmagnav_run.log[m
-	[31mshell_history.txt[m
-	[31m../test_execution.jl[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7mgit add EXPLORATION.md REPRODUCTION.md magnav_run.log MagNav-exploration.code-workspace[27m
-[7mgit commit -m "Document MagNav exploration, execution attempts, and findings"[27m
-[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit add EXPLORATION.md REPRODUCTION.md magnav_run.log MagNav-exploration.code-workspace
-git commit -m "Document MagNav exploration, execution attempts, and findings"
-[A
-[?2004lfatal: pathspec 'MagNav-exploration.code-workspace' did not match any files
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	[31mmodified:   ../Manifest.toml[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	[31m../EXECUTION_REPORT.md[m
-	[31mEXPLORATION.md[m
-	[31mREPRODUCTION.md[m
-	[31mmagnav_run.log[m
-	[31mshell_history.txt[m
-	[31m../test_execution.jl[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7m~/magnav/MagNav/data[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~/magnav/MagNav/data
-[A
-[?2004lbash: /home/lucifer/magnav/MagNav/data: Is a directory
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ [7m~/magnav/MagNav[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~/magnav/MagNav
-[A
-[?2004lbash: /home/lucifer/magnav/MagNav: Is a directory
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav/data[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav/data[00m$ cd -
-[?2004l/home/lucifer/magnav/MagNav
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mcd ~/magnav/MagNav[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd ~/magnav/MagNav
-[A
-[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mpwd[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cpwd
-[A
-[?2004l/home/lucifer/magnav/MagNav
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mls[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls
-[A
-[?2004l[0m[01;34mdata[0m  EXECUTION_REPORT.md  Introduction.pdf  MagNav-exploration.code-workspace.code-workspace  Manifest.toml  Project.toml  Readme.md  [01;34mruns[0m  [01;34msrc[0m  test_execution.jl
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mgit add EXECUTION_REPORT.md[27m
-[7mgit add EXPLORATION.md[27m
-[7mgit add REPRODUCTION.md[27m
-[7mgit add magnav_run.log[27m
-[7mgit add shell_history.txt[27m
-[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit add EXECUTION_REPORT.md
-git add EXPLORATION.md
-git add REPRODUCTION.md
-git add magnav_run.log
-git add shell_history.txt
-[A
-[?2004lfatal: pathspec 'EXPLORATION.md' did not match any files
-fatal: pathspec 'REPRODUCTION.md' did not match any files
-fatal: pathspec 'magnav_run.log' did not match any files
-fatal: pathspec 'shell_history.txt' did not match any files
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mmv data/EXPLORATION.md .[27m
-[7mmv data/REPRODUCTION.md .[27m
-[7mmv data/magnav_run.log .[27m
-[7mmv data/shell_history.txt .[27m
-[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmv data/EXPLORATION.md .
-mv data/REPRODUCTION.md .
-mv data/magnav_run.log .
-mv data/shell_history.txt .
-[A
-[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mls[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls
-[A
-[?2004l[0m[01;34mdata[0m                 EXPLORATION.md    MagNav-exploration.code-workspace.code-workspace  Manifest.toml  Readme.md        [01;34mruns[0m               [01;34msrc[0m
-EXECUTION_REPORT.md  Introduction.pdf  magnav_run.log                                    Project.toml   REPRODUCTION.md  shell_history.txt  test_execution.jl
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mEXPLORATION.md[27m
-[7mREPRODUCTION.md[27m
-[7mmagnav_run.log[27m
-[7mshell_history.txt[27m
-[7mEXECUTION_REPORT.md[27m
-[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CEXPLORATION.md
-REPRODUCTION.md
-magnav_run.log
-shell_history.txt
-EXECUTION_REPORT.md
-[A
-[?2004lEXPLORATION.md: command not found
-REPRODUCTION.md: command not found
-magnav_run.log: command not found
-shell_history.txt: command not found
-EXECUTION_REPORT.md: command not found
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mgit add EXPLORATION.md[27m
-[7mgit add REPRODUCTION.md[27m
-[7mgit add EXECUTION_REPORT.md[27m
-[7mgit add magnav_run.log[27m
-[7mgit add shell_history.txt[27m
-[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit add EXPLORATION.md
-git add REPRODUCTION.md
-git add EXECUTION_REPORT.md
-git add magnav_run.log
-git add shell_history.txt
-[A
-[?2004l[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mgit status[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit status
-[A
-[?2004lOn branch master
-Your branch is up to date with 'origin/master'.
-
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-	[32mnew file:   EXECUTION_REPORT.md[m
-	[32mnew file:   EXPLORATION.md[m
-	[32mnew file:   REPRODUCTION.md[m
-	[32mnew file:   magnav_run.log[m
-	[32mnew file:   shell_history.txt[m
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	[31mmodified:   Manifest.toml[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	[31mMagNav-exploration.code-workspace.code-workspace[m
-	[31mtest_execution.jl[m
-
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mgit commit -m "Document MagNav reproducibility execution and data-dependent blockers"[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit commit -m "Document MagNav reproducibility execution and data-dependent blockers"
-[A
-[?2004l[master f81f937] Document MagNav reproducibility execution and data-dependent blockers
- 5 files changed, 996 insertions(+)
- create mode 100644 EXECUTION_REPORT.md
- create mode 100644 EXPLORATION.md
- create mode 100644 REPRODUCTION.md
- create mode 100644 magnav_run.log
- create mode 100644 shell_history.txt
-[?2004h]0;lucifer@luciraid: ~/magnav/MagNav[01;32mlucifer@luciraid[00m:[01;34m~/magnav/MagNav[00m$ [7mgit status[27m
-[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit status
-[A
-[?2004lOn branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	[31mmodified:   Manifest.toml[m
-
-Untracked files:
-  (use 
