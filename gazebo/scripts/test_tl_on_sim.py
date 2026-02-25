@@ -21,6 +21,11 @@ What is computed (pure Python, no Julia, no MagNav):
 What requires MagNav.jl + anomaly map for exact results:
     - True EKF navigation DRMS (run benchmark/bench_tl_compare.jl on real data)
 
+IMPORTANT: TL coefficients are platform-specific.
+    - Train coefficients on the SAME aircraft/drone used for testing
+    - Never apply manned aircraft coefficients to drone data
+    - For multirotors, consider adding motor RPM as an additional regressor
+
 Dependencies:
     pip install pyulog numpy matplotlib scipy
 """
@@ -663,6 +668,66 @@ def print_error_table(dr: dict) -> None:
     print()
 
 
+# ── Coefficient sanity checks ─────────────────────────────────────────────────
+
+def check_coef_sanity(Bt_raw: np.ndarray, Bt_comp: np.ndarray,
+                      interference: np.ndarray) -> None:
+    """
+    Warn when the applied TL correction shows signs of a platform mismatch.
+
+    Three failure modes are detected:
+
+    1. Interference removed > 2× mean Earth field — the correction is larger
+       than the geomagnetic field itself, almost certainly due to coefficients
+       trained on a different aircraft type.
+
+    2. Mean compensated field is negative — physically impossible for a scalar
+       field magnitude; indicates severe over-compensation.
+
+    3. Variance increases after compensation — the correction is adding noise
+       rather than removing it; coefficients are anti-correlated with this
+       platform's interference pattern.
+    """
+    EARTH_FIELD_APPROX = Bt_raw.mean()   # use measured mean as proxy
+    rms_interf = rms(interference)
+    mean_comp  = Bt_comp.mean()
+    var_raw    = float(np.var(detrend_linear(Bt_raw)))
+    var_comp   = float(np.var(detrend_linear(Bt_comp)))
+
+    warnings = []
+
+    if rms_interf > 2.0 * EARTH_FIELD_APPROX:
+        warnings.append(
+            f"  • RMS interference removed ({rms_interf:.0f} nT) exceeds "
+            f"2× mean Earth field ({EARTH_FIELD_APPROX:.0f} nT)."
+        )
+
+    if mean_comp < 0:
+        warnings.append(
+            f"  • Mean compensated field is negative ({mean_comp:.1f} nT) — "
+            "physically impossible for a scalar magnitude."
+        )
+
+    if var_comp > 1.05 * var_raw:
+        ratio = var_comp / var_raw
+        warnings.append(
+            f"  • Variance increased after compensation (×{ratio:.2f}). "
+            "Correction is adding noise, not removing it."
+        )
+
+    if warnings:
+        print("\n  ⚠️  Large correction applied. "
+              "Verify coefficients were trained on this platform.")
+        for w in warnings:
+            print(w)
+        print(
+            "\n  Reminder (from module docstring):\n"
+            "    • Train coefficients on the SAME aircraft/drone used for testing\n"
+            "    • Never apply manned aircraft coefficients to drone data\n"
+            "    • For multirotors, consider adding motor RPM as an additional regressor"
+        )
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -731,6 +796,7 @@ def main():
     print(f"  RMS interference removed: {rms(interference):.2f} nT")
     print(f"  |B| raw  — mean: {Bt_raw.mean():.1f} nT, std: {Bt_raw.std():.1f} nT")
     print(f"  |B| comp — mean: {Bt_comp.mean():.1f} nT, std: {Bt_comp.std():.1f} nT")
+    check_coef_sanity(Bt_raw, Bt_comp, interference)
 
     # ── Metrics ───────────────────────────────────────────────────────────────
     heading = data["heading_rad"]
