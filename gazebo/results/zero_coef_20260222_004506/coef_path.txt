@@ -1,0 +1,1 @@
+/home/lucifer/magnav/magnav-research/gazebo/test_data/zero_coef.txt

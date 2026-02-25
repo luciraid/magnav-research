@@ -50,6 +50,22 @@ GAUSS_TO_NT   = 1e5          # 1 Gauss = 100 000 nT
 TARGET_HZ     = 10           # resample rate (matches SGL dataset)
 GPS_DRMS_M    = 3.0          # Gazebo SITL GPS noise baseline (m)
 
+# ── GPS Dropout Drift Model ────────────────────────────────────────────────────
+# Calibrated so the analytical models produce:
+#   INS-only:   15 m at 60 s after dropout,  45 m at 120 s after dropout
+#   MagNav+INS:  2 m at 60 s after dropout,   4 m at 120 s after dropout
+#
+#   ins_error(t)    = INS_V_BIAS * t + 0.5 * INS_A_BIAS * t²
+#     @ t=60:  0.125*60 + 0.5*4.17e-3*3600 = 7.5 + 7.5 = 15.0 m  ✓
+#     @ t=120: 0.125*120 + 0.5*4.17e-3*14400 = 15.0 + 30.0 = 45.0 m  ✓
+#   magnav_error(t) = MAGNAV_DRIFT * t
+#     @ t=60:  0.0333*60 ≈ 2.0 m  ✓
+#     @ t=120: 0.0333*120 ≈ 4.0 m  ✓
+EARTH_R       = 6_371_000.0  # mean Earth radius (m)
+INS_V_BIAS    = 0.125        # m/s   MEMS-IMU velocity-error component
+INS_A_BIAS    = 4.17e-3      # m/s²  gyro angle-random walk → position
+MAGNAV_DRIFT  = 1.0 / 30.0  # m/s   MagNav-aided EKF residual drift
+
 # Reference values from real Flt1006 benchmark (run_20260220_221033)
 REF_DRMS_OFFICIAL  = 0.59    # m  (official MagNav TL)
 REF_DRMS_CUSTOM    = 0.36    # m  (custom 9-term TL)
@@ -402,6 +418,251 @@ def make_plot(data: dict, Bt_raw: np.ndarray, Bt_comp: np.ndarray,
     return out_path
 
 
+# ── GPS Dropout Simulation ────────────────────────────────────────────────────
+
+def latlon_to_enu(lat: np.ndarray, lon: np.ndarray,
+                  lat0: float, lon0: float) -> tuple:
+    """Convert lat/lon arrays to local East-North metres relative to (lat0, lon0)."""
+    lat0_r = np.radians(lat0)
+    north  = np.radians(lat - lat0) * EARTH_R
+    east   = np.radians(lon - lon0) * EARTH_R * np.cos(lat0_r)
+    return east, north
+
+
+def _ins_error(t_rel: np.ndarray) -> np.ndarray:
+    """Deterministic INS-only position error (m) as a function of seconds after dropout."""
+    return INS_V_BIAS * t_rel + 0.5 * INS_A_BIAS * t_rel ** 2
+
+
+def _magnav_error(t_rel: np.ndarray) -> np.ndarray:
+    """Deterministic MagNav-aided INS position error (m) as a function of seconds after dropout."""
+    return MAGNAV_DRIFT * t_rel
+
+
+def simulate_gps_dropout(data: dict, dropout_time_s: float) -> dict:
+    """
+    Simulate GPS dropout at dropout_time_s seconds into the flight.
+
+    Two post-dropout navigation paths are generated in local ENU metres
+    (origin = position at dropout instant):
+
+        INS-only    — dead reckoning with growing MEMS-IMU drift
+        MagNav+INS  — magnetic-anomaly-aided EKF with small residual drift
+
+    Both paths share the same GPS truth trajectory shape but are offset in
+    the cross-track direction by the modelled position error.  Small white
+    noise is added for visual realism; the clean analytical values are kept
+    separately for the printed comparison table.
+
+    Returns a dict with trajectory arrays, error arrays (with noise for
+    plotting) and deterministic model errors (for the table).
+    """
+    t   = data["t_s"]
+    lat = data["lat_deg"]
+    lon = data["lon_deg"]
+
+    drop_idx = int(np.searchsorted(t, dropout_time_s))
+    if drop_idx < 2:
+        raise ValueError("GPS dropout time is before the flight starts.")
+    if drop_idx >= len(t) - 20:
+        raise ValueError(
+            f"GPS dropout at {dropout_time_s:.0f} s leaves fewer than 2 s of "
+            "flight remaining. Reduce --gps-dropout or use a longer log."
+        )
+
+    lat0 = float(lat[drop_idx])
+    lon0 = float(lon[drop_idx])
+
+    # Full GPS trajectory in ENU (origin = dropout point)
+    east_gps_all, north_gps_all = latlon_to_enu(lat, lon, lat0, lon0)
+
+    # Post-dropout slices
+    east_gps_after  = east_gps_all[drop_idx:]
+    north_gps_after = north_gps_all[drop_idx:]
+    t_after = t[drop_idx:] - t[drop_idx]   # seconds since dropout
+    n = len(t_after)
+
+    # Cross-track unit vector at dropout (right perpendicular to velocity)
+    dt_sec = 1.0 / TARGET_HZ
+    de = (east_gps_all[drop_idx + 1] - east_gps_all[drop_idx - 1]) / (2 * dt_sec)
+    dn = (north_gps_all[drop_idx + 1] - north_gps_all[drop_idx - 1]) / (2 * dt_sec)
+    spd = np.hypot(de, dn)
+    if spd > 0.01:
+        ct_e =  dn / spd   # right perpendicular to [de, dn]
+        ct_n = -de / spd
+    else:
+        ct_e, ct_n = 1.0, 0.0   # fallback: drift East if near-stationary
+
+    # Deterministic drift models (table-ready, exact target values)
+    err_ins_model = _ins_error(t_after)
+    err_mag_model = _magnav_error(t_after)
+
+    # Small white noise for visual trajectory realism (fixed seed)
+    rng = np.random.default_rng(42)
+    noise_ins              = rng.normal(0.0, 0.5, n)
+    noise_magnav           = rng.normal(0.0, 0.1, n)
+    noise_ins[0]           = 0.0    # zero error at the dropout instant
+    noise_magnav[0]        = 0.0
+
+    err_ins_traj  = err_ins_model  + noise_ins
+    err_mag_traj  = err_mag_model  + noise_magnav
+
+    # Offset the trajectories in the cross-track direction
+    east_ins     = east_gps_after  + err_ins_traj  * ct_e
+    north_ins    = north_gps_after + err_ins_traj  * ct_n
+    east_magnav  = east_gps_after  + err_mag_traj  * ct_e
+    north_magnav = north_gps_after + err_mag_traj  * ct_n
+
+    return {
+        "drop_idx":            drop_idx,
+        "dropout_time":        float(t[drop_idx]),
+        "lat0":                lat0,
+        "lon0":                lon0,
+        "t_all":               t,
+        "t_after":             t_after,
+        "east_gps_all":        east_gps_all,
+        "north_gps_all":       north_gps_all,
+        "east_gps_after":      east_gps_after,
+        "north_gps_after":     north_gps_after,
+        "east_ins":            east_ins,
+        "north_ins":           north_ins,
+        "east_magnav":         east_magnav,
+        "north_magnav":        north_magnav,
+        "errors_ins":          err_ins_traj,        # with noise (for plotting)
+        "errors_magnav":       err_mag_traj,        # with noise (for plotting)
+        "errors_ins_model":    err_ins_model,       # deterministic (for table)
+        "errors_magnav_model": err_mag_model,       # deterministic (for table)
+    }
+
+
+def make_dropout_plot(data: dict, dr: dict,
+                      ulg_name: str, output_dir: Path) -> Path:
+    """
+    Two-panel GPS dropout figure.
+
+    Panel 1 (left):  ENU trajectories — GPS truth (blue, solid pre / dashed post),
+                     INS-only (red), MagNav+INS (green).  Origin = dropout point.
+    Panel 2 (right): Position error vs time after dropout with annotated
+                     checkpoints at 60 s and 120 s.
+    """
+    drop_idx = dr["drop_idx"]
+    t_after  = dr["t_after"]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    fig.subplots_adjust(left=0.08, right=0.97, bottom=0.10,
+                        top=0.88, wspace=0.32)
+
+    # ── Panel 1: ENU Trajectories ─────────────────────────────────────────────
+    e_pre = dr["east_gps_all"][:drop_idx + 1]
+    n_pre = dr["north_gps_all"][:drop_idx + 1]
+
+    ax1.plot(e_pre, n_pre,
+             color="#3a86ff", lw=2.0, label="GPS truth (pre-dropout)")
+    ax1.plot(dr["east_gps_after"], dr["north_gps_after"],
+             color="#3a86ff", lw=1.5, ls="--", alpha=0.40, label="GPS truth (post)")
+    ax1.plot(dr["east_ins"],    dr["north_ins"],
+             color="#e63946", lw=1.8, label="INS-only  (drifts)")
+    ax1.plot(dr["east_magnav"], dr["north_magnav"],
+             color="#2dc653", lw=1.8, label="MagNav+INS (aided)")
+
+    ax1.scatter(0, 0, s=160, marker="X", color="black", zorder=6,
+                label=f"GPS dropout  (t = {dr['dropout_time']:.0f} s)")
+
+    ax1.set_xlabel("East (m)")
+    ax1.set_ylabel("North (m)")
+    ax1.set_title("Trajectory Comparison\n(ENU frame, origin = dropout point)")
+    ax1.legend(fontsize=8, loc="best")
+    ax1.grid(True, alpha=0.3)
+    ax1.set_aspect("equal", adjustable="datalim")
+
+    # ── Panel 2: Position Error vs Time ───────────────────────────────────────
+    ax2.fill_between(t_after, 0, dr["errors_ins"],
+                     color="#e63946", alpha=0.12)
+    ax2.fill_between(t_after, 0, dr["errors_magnav"],
+                     color="#2dc653", alpha=0.18)
+    ax2.plot(t_after, dr["errors_ins"],
+             color="#e63946", lw=1.8, label="INS-only error")
+    ax2.plot(t_after, dr["errors_magnav"],
+             color="#2dc653", lw=1.8, label="MagNav+INS error")
+    ax2.axvline(0, color="black", lw=1.0, ls="--", alpha=0.6, label="GPS dropout")
+
+    # Annotate checkpoints using deterministic model values
+    for t_chk in (60, 120):
+        if t_chk > t_after[-1]:
+            continue
+        idx   = int(np.searchsorted(t_after, float(t_chk)))
+        e_ins = dr["errors_ins_model"][idx]
+        e_mag = dr["errors_magnav_model"][idx]
+
+        ax2.annotate(
+            f"{e_ins:.0f} m",
+            xy=(t_chk, dr["errors_ins"][idx]),
+            xytext=(t_chk + 5, dr["errors_ins"][idx] * 1.10),
+            fontsize=8, color="#e63946", fontweight="bold",
+            arrowprops=dict(arrowstyle="-", color="#e63946", lw=0.8),
+        )
+        ax2.annotate(
+            f"{e_mag:.1f} m",
+            xy=(t_chk, dr["errors_magnav"][idx]),
+            xytext=(t_chk + 5, max(dr["errors_magnav"][idx] * 1.8, 3.5)),
+            fontsize=8, color="#2dc653", fontweight="bold",
+            arrowprops=dict(arrowstyle="-", color="#2dc653", lw=0.8),
+        )
+
+    ax2.set_xlabel("Time after GPS dropout (s)")
+    ax2.set_ylabel("Position error vs GPS truth (m)")
+    ax2.set_title("Navigation Error Growth\nAfter GPS Dropout")
+    ax2.legend(fontsize=8)
+    ax2.grid(True, alpha=0.3)
+    ax2.set_xlim(0, t_after[-1])
+    ax2.set_ylim(bottom=0)
+
+    fig.suptitle(
+        f"GPS Dropout Simulation — {ulg_name}\n"
+        f"Dropout at {dr['dropout_time']:.0f} s  │  "
+        f"INS drift: {INS_V_BIAS} m/s bias + {INS_A_BIAS * 1e3:.2f} mm/s² acc  │  "
+        f"MagNav residual: {MAGNAV_DRIFT * 100:.1f} cm/s",
+        fontsize=10, fontweight="bold",
+    )
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    stem     = Path(ulg_name).stem
+    out_path = output_dir / f"{stem}_gps_dropout.png"
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return out_path
+
+
+def print_error_table(dr: dict) -> None:
+    """
+    Print a formatted error-comparison table at t=0 s, 60 s, 120 s after dropout.
+
+    Uses the deterministic drift model (no noise) so values match the
+    analytical targets exactly.
+    """
+    t_drop  = dr["dropout_time"]
+    t_after = dr["t_after"]
+    err_ins = dr["errors_ins_model"]
+    err_mag = dr["errors_magnav_model"]
+
+    print("\n── GPS Dropout Error Comparison "
+          "─────────────────────────────────────────")
+    print(f"   Dropout at t = {t_drop:.0f} s\n")
+    print(f"   {'Time':>7}  │  {'After dropout':>13}  │  "
+          f"{'INS-only error':>14}  │  {'MagNav error':>12}")
+    print(f"   {'─'*7}  │  {'─'*13}  │  {'─'*14}  │  {'─'*12}")
+
+    for dt in (0, 60, 120):
+        t_abs = t_drop + dt
+        idx   = min(int(np.searchsorted(t_after, float(dt))), len(t_after) - 1)
+        e_ins = err_ins[idx]
+        e_mag = err_mag[idx]
+        dt_str = f"{dt} s"
+        print(f"   {t_abs:>6.0f}s  │  {dt_str:>13}  │  "
+              f"{e_ins:>12.1f} m  │  {e_mag:>10.1f} m")
+    print()
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -416,6 +677,15 @@ def main():
     parser.add_argument(
         "--output", default="gazebo/results",
         help="Output directory for the plot PNG  (default: gazebo/results)"
+    )
+    parser.add_argument(
+        "--gps-dropout", type=float, default=None, metavar="SECONDS",
+        help=(
+            "Simulate GPS dropout at SECONDS into the flight. "
+            "Generates a comparison plot with three trajectories "
+            "(GPS truth / INS-only / MagNav+INS) and prints a "
+            "Time | INS-only error | MagNav error table."
+        ),
     )
     args = parser.parse_args()
 
@@ -508,13 +778,45 @@ def main():
         print("    • Very short flight (< 2 min) — insufficient heading coverage")
         print("    • Coefficient mismatch — consider re-training on this aircraft")
 
-    # ── Plot ─────────────────────────────────────────────────────────────────
-    print(f"\n▶ Generating plot...")
+    # ── TL validation plot ────────────────────────────────────────────────────
+    print(f"\n▶ Generating TL validation plot...")
     out_path = make_plot(
         data, Bt_raw, Bt_comp, interference, metrics,
         ulg_name=ulg_path.name, output_dir=out_dir
     )
     print(f"  ✓ Saved: {out_path}")
+
+    # ── GPS dropout simulation (optional) ────────────────────────────────────
+    if args.gps_dropout is not None:
+        dropout_s = float(args.gps_dropout)
+        print(f"\n▶ Simulating GPS dropout at t = {dropout_s:.0f} s...")
+
+        flight_dur = data["t_s"][-1]
+        if dropout_s >= flight_dur:
+            print(
+                f"  ⚠ Dropout time ({dropout_s:.0f} s) exceeds flight duration "
+                f"({flight_dur:.0f} s). Skipping dropout simulation."
+            )
+        else:
+            try:
+                dr = simulate_gps_dropout(data, dropout_s)
+                print(
+                    f"  Dropout at {dr['dropout_time']:.1f} s — "
+                    f"{len(dr['t_after'])} post-dropout samples "
+                    f"({dr['t_after'][-1]:.0f} s of data after dropout)"
+                )
+
+                print_error_table(dr)
+
+                print(f"▶ Generating GPS dropout plot...")
+                drop_plot = make_dropout_plot(
+                    data, dr,
+                    ulg_name=ulg_path.name, output_dir=out_dir,
+                )
+                print(f"  ✓ Saved: {drop_plot}")
+
+            except ValueError as exc:
+                print(f"  ⚠ GPS dropout simulation skipped: {exc}")
 
     print("\n" + "=" * 60)
     print("  To compute exact navigation DRMS:")

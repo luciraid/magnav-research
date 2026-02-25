@@ -1,0 +1,1 @@
+/home/lucifer/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-02-21/17_44_51.ulg
